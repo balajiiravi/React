@@ -4,10 +4,6 @@ import Answer from './Answers';
 import QuestionCount from './QuestionCount';
 
 class Quiz extends React.Component {
-     constructor(props)
-        {
-            super(props);
-        }
 
       renderAnswer = (key) => {
         let answers = [];
@@ -15,7 +11,8 @@ class Quiz extends React.Component {
             <Answer
             id = {key.value}
             value = {key.value}
-            onChange = {this.props.handleAnswer}/>
+            onAnswerSelected = {this.props.onAnswerSelected}
+            />
           );
       }
 
@@ -33,7 +30,9 @@ class Quiz extends React.Component {
 			 		total={this.props.questionTotal}
 			  	/>
                 <Question question={this.props.question}/>
+                <ul>
                 {answers}
+                </ul>
             </div>
         );
    }

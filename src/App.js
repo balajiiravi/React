@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import quizQuestions from './api/quizQuestions';
 import Quiz from './components/Quiz';
+import Results from './components/Results';
 import logo from './logo.svg';
 import './App.css';
 
@@ -9,16 +10,15 @@ class App extends Component {
       constructor(props){
         super(props);
         this.state = {
-            qno:0,
+            qno:1,
             answerOptions:'',
             question:'',
-            counter:0
+            counter:0,
         };
         this.handleAnswer = this.handleAnswer.bind(this);
       }
 
       componentDidMount(){
-        console.log(quizQuestions[0]);
         this.setState({
           question: quizQuestions[0].question,
           answerOptions: quizQuestions[0].answers
@@ -26,28 +26,33 @@ class App extends Component {
       }
 
       handleAnswer(event) {
-        this.validateAnswer(event.currentTarget.value);
-
-        if (this.state.qno < quizQuestions.length) {
-            this.setNextQuestion();
-        } else {
-            this.getResults();
-        }
-      }
-
-      validateAnswer(answer) {
-        if (answer.validity === true)
+        let validity = this.validateAnswer(event.currentTarget.value);
+        if (validity === true)
         {
-            console.log("Valid Answer");
+            if (this.state.qno < quizQuestions.length) {
+             this.setNextQuestion()
+             } else {
+              this.getResults()
+             }
+            console.log("True");
         }
         else
         {
-            console.log("In valid Answer");
+            console.log("False");
         }
 
-        this.setState({
-            answer: answer
-        });
+      }
+
+      validateAnswer(answer) {
+        let answerOptns = quizQuestions[this.state.counter].answers;
+
+        for (let item of answerOptns)
+         {
+            if (item.value === answer)
+            {
+                return item.valid;
+            }
+         }
       }
 
       setNextQuestion() {
@@ -63,7 +68,9 @@ class App extends Component {
       }
 
       getResults() {
-        console.log("Results")
+        return(
+            <Results />
+            );
       }
 
       renderQuiz(){
@@ -73,8 +80,8 @@ class App extends Component {
             question={this.state.question}
             questionTotal={quizQuestions.length}
             answerOptions={this.state.answerOptions}
-            onAnswerSelected={this.handleAnswerSelected}
-        />)
+            onAnswerSelected={this.handleAnswer}
+        />);
       }
 
       render() {
